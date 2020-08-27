@@ -1,0 +1,45 @@
+security:
+  require-ssl:true
+server:
+    port: 8443
+    ssl:
+      enabled: true
+      key-alias: spring
+      key-store: classpath:saml/keystore.jks
+      key-store-password: secret
+    servlet:
+      context-path: /
+
+spring:
+  thymeleaf:
+    cache: false
+    enabled: true
+    prefix: classpath:templates/
+    suffix: .html
+  security:
+    saml2:
+      network:
+        read-timeout: 10000
+        connect-timeout: 5000
+      service-provider:
+        entity-id: dummybot-saml
+        alias: dummybot-saml
+        sign-metadata: false
+        sign-requests: false
+        want-assertions-signed: true
+        single-logout-enabled: true
+        encrypt-assertions: false
+        name-ids:
+          - urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+          - urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+          - urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+        keys:
+          active:
+            name: sp-signing-key-1
+
+        providers:
+          - alias: enter-into-dummybot-saml
+            metadata: https://login.microsoftonline.com/c5ca272d-4a1f-4a91-bc8d-0612fc364138/federationmetadata/2007-06/federationmetadata.xml?appid=5ef66785-5ea5-4737-8b28-db3c8d20d9ec
+            skip-ssl-validation: true
+            link-text: enter-into-dummybot-saml
+            authentication-request-binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
